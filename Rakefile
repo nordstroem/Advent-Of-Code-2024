@@ -14,11 +14,11 @@ def test_file
 end
 
 file session_file do
-  raise 'No session cookie found: .session' unless File.exist?('.session')
+  raise 'No session cookie found: .session'
 end
 
 file test_file do
-  raise 'No test input found: inputs/test.txt' unless File.exist?('inputs/test.txt')
+  raise 'No test input found: inputs/test.txt'
 end
 
 input_files.each do |day, f|
@@ -41,10 +41,12 @@ end
 
 namespace 'solve' do
   input_files.each do |day, f|
-    (1..2).each do |part|
-      task "#{day}_#{part}" => f do
-        result = solve(day, part, File.read(f))
-        puts "Day #{day}, part #{part} result: #{result}"
+    namespace day.to_s do
+      (1..2).each do |part|
+        task part => f do
+          result = solve(day, part, File.read(f))
+          puts "Day #{day}, part #{part} result: #{result}"
+        end
       end
     end
   end
@@ -52,10 +54,12 @@ end
 
 namespace 'test' do
   input_files.each_key do |day|
-    (1..2).each do |part|
-      task "#{day}_#{part}" => test_file do
-        result = solve(day, part, File.read('inputs/test.txt'))
-        puts "Day #{day}, part #{part} result: #{result}"
+    namespace day.to_s do
+      (1..2).each do |part|
+        task part => test_file do
+          result = solve(day, part, File.read(test_file))
+          puts "Day #{day}, part #{part} result: #{result}"
+        end
       end
     end
   end
