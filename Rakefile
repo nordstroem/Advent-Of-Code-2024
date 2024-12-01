@@ -44,8 +44,7 @@ namespace 'solve' do
     namespace day.to_s do
       (1..2).each do |part|
         task part => f do
-          result = solve(day, part, File.read(f))
-          puts "Day #{day}, part #{part} result: #{result}"
+          puts solve(day, part, File.read(f))
         end
       end
     end
@@ -57,8 +56,7 @@ namespace 'test' do
     namespace day.to_s do
       (1..2).each do |part|
         task part => test_file do
-          result = solve(day, part, File.read(test_file))
-          puts "Day #{day}, part #{part} result: #{result}"
+          puts solve(day, part, File.read(test_file))
         end
       end
     end
