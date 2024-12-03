@@ -4,22 +4,17 @@ class Day03
   end
 
   def part2(input)
-    start = 0
     ans = 0
-    should_add = true
-    while start < input.length
-      do_index = input.index(/do\(\)/, start) || input.length
-      dont_index = input.index(/don't\(\)/, start) || input.length
-      mul_index = input.index(/mul\(\d+,\d+\)/, start) || input.length
-
-      if mul_index < do_index && mul_index < dont_index
-        ans += input[start...input.length].scan(/mul\((\d+),(\d+)\)/).map { |a, b| a.to_i * b.to_i }[0] if should_add
-      elsif do_index < dont_index
-        should_add = true
+    enabled = true
+    pattern = /(do\(\))|(don't\(\))|mul\((\d+),(\d+)\)/
+    input.scan(pattern) do |enable, _, a, b|
+      if a && b
+        ans += a.to_i * b.to_i if enabled
+      elsif enable
+        enabled = true
       else
-        should_add = false
+        enabled = false
       end
-      start = [mul_index, dont_index, do_index].min + 1
     end
     ans
   end
