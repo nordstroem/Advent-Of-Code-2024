@@ -1,6 +1,6 @@
 class Day02
   def split(input)
-    input.split("\n").map(&:split).map { |numbers| numbers.map(&:to_i) }
+    input.lines.map { |line| line.split.map(&:to_i) }
   end
 
   def difference(lines)
@@ -8,7 +8,7 @@ class Day02
   end
 
   def safe?(diff)
-    diff.all? { |num| num.abs >= 1 && num.abs <= 3 } && (diff.all?(&:positive?) || diff.all?(&:negative?))
+    diff.all? { |num| num.abs.between?(1, 3) } && (diff.all?(&:positive?) || diff.all?(&:negative?))
   end
 
   def part1(input)
@@ -16,16 +16,13 @@ class Day02
   end
 
   def safe_2?(numbers)
-    diff = difference(numbers)
-    return true if safe? diff
+    return true if safe? difference(numbers)
 
-    numbers.each_index do |i|
+    numbers.each_index.any? do |i|
       n = numbers.dup
       n.delete_at(i)
-      diff = difference(n)
-      return true if safe?(diff)
+      safe? difference(n)
     end
-    false
   end
 
   def part2(input)
