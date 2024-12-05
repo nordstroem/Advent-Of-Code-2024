@@ -19,7 +19,30 @@ class Day05
     orders.filter { |o| valid?(rules, o) }.sum { |o| o[o.size / 2] }
   end
 
+  def topological_sort(rules, order)
+    visited = {}
+    stack = []
+    dfs = lambda do |node|
+      return if visited[node] == :permanent
+      raise 'Cycle detected' if visited[node] == :temporary
+
+      visited[node] = :temporary
+      (rules[node] & order).each do |neighbor|
+        dfs.call(neighbor)
+      end
+      visited[node] = :permanent
+      stack.push(node)
+    end
+
+    order.each do |node|
+      dfs.call(node) unless visited[node]
+    end
+
+    stack.reverse
+  end
+
   def part2(input)
     rules, orders = prepare input
+    orders.filter { |o| !valid?(rules, o) }.map { |o| topological_sort(rules, o) }.sum { |o| o[o.size / 2] }
   end
 end
