@@ -1,5 +1,3 @@
-require 'set'
-
 class Day06
   def guard_position(grid)
     grid.each_with_index do |row, r|
