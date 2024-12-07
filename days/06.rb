@@ -38,6 +38,40 @@ class Day06
     visited.size
   end
 
+  def loop?(grid, guard)
+    guard = guard.dup
+    dir = -1i
+    visited = Set.new [[guard, dir]]
+    loop do
+      new_position = guard + dir
+      break unless inside?(grid, new_position)
+
+      if wall?(grid, new_position)
+        dir *= 1i
+      elsif visited.include? [new_position, dir]
+        return true
+      else
+        visited << [new_position, dir]
+        guard = new_position
+      end
+    end
+    false
+  end
+
   def part2(input)
+    grid = input.lines.map(&:chars)
+    guard = guard_position grid
+
+    ans = 0
+    grid.size.times do |r|
+      grid[r].size.times do |c|
+        next unless grid[r][c] == '.'
+
+        test_grid = grid.map(&:clone)
+        test_grid[r][c] = '#'
+        ans += 1 if loop?(test_grid, guard)
+      end
+    end
+    ans
   end
 end
