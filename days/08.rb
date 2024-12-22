@@ -18,8 +18,8 @@ class Day08
       dc = c1 - c2
       node1 = [r1 + dr, c1 + dc]
       node2 = [r2 - dr, c2 - dc]
-      antinodes << node1 if valid?(grid, node1[0], node1[1])
-      antinodes << node2 if valid?(grid, node2[0], node2[1])
+      antinodes << node1 if valid?(grid, *node1)
+      antinodes << node2 if valid?(grid, *node2)
     end
     antinodes
   end
