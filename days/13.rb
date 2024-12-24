@@ -1,30 +1,40 @@
 class Day13
   Rule = Struct.new(:ax, :ay, :bx, :by, :x, :y)
 
+  def get_cost(rule)
+    det = rule.ax * rule.by - rule.ay * rule.bx
+    return 0 if det.zero?
+
+    sa = (rule.by * rule.x - rule.bx * rule.y) / det
+    sb = (-rule.ay * rule.x + rule.ax * rule.y) / det
+
+    return 0 if sa < 0 || sb < 0
+
+    return 0 if (sa * rule.ax + sb * rule.bx) != rule.x
+    return 0 if (sa * rule.ay + sb * rule.by) != rule.y
+
+    (3 * sa + sb)
+  end
+
   def part1(input)
     rules = input.split("\n\n").map do |section|
       Rule.new(*section.scan(/\d+/).map(&:to_i))
     end
 
     rules.sum do |rule|
-      is_set = false
-      best_cost = 100 * 3 + 100
-      100.times do |ai|
-        100.times do |bi|
-          x = ai * rule.ax + bi * rule.bx
-          y = ai * rule.ay + bi * rule.by
-
-          cost = 3 * ai + bi
-          if x == rule.x && y == rule.y && cost < best_cost
-            best_cost = cost
-            is_set = true
-          end
-        end
-      end
-      is_set ? best_cost : 0
+      get_cost(rule)
     end
   end
 
   def part2(input)
+    rules = input.split("\n\n").map do |section|
+      Rule.new(*section.scan(/\d+/).map(&:to_i))
+    end
+
+    rules.sum do |rule|
+      rule.x += 10_000_000_000_000
+      rule.y += 10_000_000_000_000
+      get_cost(rule)
+    end
   end
 end
